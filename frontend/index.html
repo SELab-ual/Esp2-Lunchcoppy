@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurante Pro</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>🍽️ Gestión de Pedidos</h1>
+        
+        <article>
+            <div class="grid">
+                <input type="text" v-model="nuevoMesa" placeholder="Mesa (ej: Mesa 1)">
+                <input type="text" v-model="nuevoPlato" placeholder="Plato (ej: Pizza)">
+                <button @click="enviarPedido">Enviar a Cocina</button>
+            </div>
+        </article>
+
+        <h3>Pedidos en curso:</h3>
+        <article v-for="p in pedidos" :key="p.id">
+            <strong>{{ p.mesa }}</strong> ha pedido: {{ p.plato }}
+        </article>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    pedidos: [],
+                    nuevoMesa: '',
+                    nuevoPlato: ''
+                }
+            },
+            mounted() {
+                this.cargarPedidos();
+            },
+            methods: {
+                async cargarPedidos() {
+                    // Llamamos a la API a través de Nginx
+                    const response = await fetch('/api/pedidos');
+                    this.pedidos = await response.json();
+                },
+                async enviarPedido() {
+                    await fetch('/api/pedidos', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            mesa: this.nuevoMesa, 
+                            plato: this.nuevoPlato
+                        })
+                    });
+                    this.nuevoMesa = '';
+                    this.nuevoPlato = '';
+                    this.cargarPedidos(); // Recargar lista
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

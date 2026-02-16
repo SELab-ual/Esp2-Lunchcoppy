@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  # El Cerebro (oculto al mundo, solo visible para el frontend)
+  backend:
+    build: ./backend
+    restart: always
+
+  # La Cara (Lo único que ve el usuario)
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"  # Entras por localhost:80
+    depends_on:
+      - backend
