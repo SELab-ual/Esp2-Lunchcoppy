@@ -1,64 +1,44 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Restaurante Pro</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <meta charset="utf-8"/>
+  <title>Amazing Lunch - Sprint1</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .search { margin-bottom: 10px; }
+    .result { border-bottom: 1px solid #ddd; padding: 8px 0; }
+  </style>
 </head>
 <body>
-    <div id="app" class="container">
-        <h1>🍽️ Gestión de Pedidos</h1>
-        
-        <article>
-            <div class="grid">
-                <input type="text" v-model="nuevoMesa" placeholder="Mesa (ej: Mesa 1)">
-                <input type="text" v-model="nuevoPlato" placeholder="Plato (ej: Pizza)">
-                <button @click="enviarPedido">Enviar a Cocina</button>
-            </div>
-        </article>
+  <h1>Amazing Lunch - Sprint1</h1>
 
-        <h3>Pedidos en curso:</h3>
-        <article v-for="p in pedidos" :key="p.id">
-            <strong>{{ p.mesa }}</strong> ha pedido: {{ p.plato }}
-        </article>
+  <div id="auth">
+    <h3>Register</h3>
+    <input id="reg_user" placeholder="username"/>
+    <input id="reg_email" placeholder="email"/>
+    <input id="reg_pass" placeholder="password" type="password"/>
+    <button onclick="register()">Register</button>
+
+    <h3>Login</h3>
+    <input id="login_user" placeholder="username"/>
+    <input id="login_pass" placeholder="password" type="password"/>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="search_ui" style="display:none;">
+    <div class="search">
+      <input id="q" placeholder="free text"/>
+      <input id="min_price" placeholder="min price" type="number" min="0"/>
+      <input id="max_price" placeholder="max price" type="number" min="0"/>
+      <select id="sort_by">
+        <option value="distance">Distance (default)</option>
+        <option value="price">Price</option>
+      </select>
+      <button onclick="doSearch()">Search</button>
     </div>
+    <div id="results"></div>
+  </div>
 
-    <script>
-        const { createApp } = Vue
-
-        createApp({
-            data() {
-                return {
-                    pedidos: [],
-                    nuevoMesa: '',
-                    nuevoPlato: ''
-                }
-            },
-            mounted() {
-                this.cargarPedidos();
-            },
-            methods: {
-                async cargarPedidos() {
-                    // Llamamos a la API a través de Nginx
-                    const response = await fetch('/api/pedidos');
-                    this.pedidos = await response.json();
-                },
-                async enviarPedido() {
-                    await fetch('/api/pedidos', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            mesa: this.nuevoMesa, 
-                            plato: this.nuevoPlato
-                        })
-                    });
-                    this.nuevoMesa = '';
-                    this.nuevoPlato = '';
-                    this.cargarPedidos(); // Recargar lista
-                }
-            }
-        }).mount('#app')
-    </script>
+<script src="app.js"></script>
 </body>
 </html>
