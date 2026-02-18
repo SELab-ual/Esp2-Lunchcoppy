@@ -50,3 +50,32 @@ docker-compose up --build
 
 
 
+### NOTAR ISA ajuste en requirements.txt
+
+el original
+```
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+sqlmodel==0.0.8
+psycopg2-binary==2.9.7
+passlib[bcrypt]==1.7.4
+python-jose==3.3.0
+pydantic==1.10.7
+python-dotenv==1.0.0
+```
+
+Hubo que cambiar librerías añadiendo -- cambia dependencias
+ 
+```
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+sqlmodel==0.0.8
+psycopg2-binary==2.9.7
+passlib[bcrypt]==1.7.4
+python-jose==3.3.0
+pydantic==1.10.7
+python-dotenv==1.0.0
+
+
+bcrypt==4.0.1
+```
